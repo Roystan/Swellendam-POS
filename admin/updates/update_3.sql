@@ -1,0 +1,2 @@
+ALTER TABLE `members`
+	ADD COLUMN `adress` TEXT NULL DEFAULT NULL AFTER `created`;

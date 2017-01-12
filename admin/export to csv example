@@ -1,0 +1,327 @@
+PHP Dev Zone
+Home CakePHP jQuery Opencart PHP About Contact
+Export Data Into Excel Or CSV File In CakePHP
+By Ketan Patel
+Once I was working on cakePHP demo project in which I need to export the data to CSV format. As it was specific to cakephp I have to find the way how to accomplish this. So for that I googled and found one easy and effective solution that I am going to share with you. I hope you find it helpful.
+
+Export Data into CSV file in Cakephp
+
+
+
+
+
+In this tutorial we are using one helper class called ‘CsvHelper.php’.If you are new in CakePHP then you can refer this link to know about Helpers in CakePHP.
+
+http://book.cakephp.org/2.0/en/views/helpers.html
+
+You just have to simply follow the steps and you’ll get the result in no time.So lets begin the process.
+
+
+Step :1 Save the following content in the file named as CsvHelper.php your app/View/Helper directory.
+<?php
+class CsvHelper extends AppHelper
+{
+var $delimiter = ',';
+var $enclosure = '"';
+var $filename = 'Export.csv';
+var $line = array();
+var $buffer;
+
+function CsvHelper()
+{
+    $this->clear();
+}
+function clear() 
+{
+    $this->line = array();
+    $this->buffer = fopen('php://temp/maxmemory:'. (5*1024*1024), 'r+');
+}
+
+function addField($value) 
+{
+    $this->line[] = $value;
+}
+
+function endRow() 
+{
+    $this->addRow($this->line);
+    $this->line = array();
+}
+
+function addRow($row) 
+{
+    fputcsv($this->buffer, $row, $this->delimiter, $this->enclosure);
+}
+
+function renderHeaders() 
+{
+    header('Content-Type: text/csv');
+    header("Content-type:application/vnd.ms-excel");
+    header("Content-disposition:attachment;filename=".$this->filename);
+}
+
+function setFilename($filename) 
+{
+    $this->filename = $filename;
+    if (strtolower(substr($this->filename, -4)) != '.csv') 
+    {
+        $this->filename .= '.csv';
+    }
+}
+
+function render($outputHeaders = true, $to_encoding = null, $from_encoding ="auto") 
+{
+    if ($outputHeaders) 
+    {
+        if (is_string($outputHeaders)) 
+        {
+            $this->setFilename($outputHeaders);
+        }
+        $this->renderHeaders();
+    }
+    rewind($this->buffer);
+    $output = stream_get_contents($this->buffer);
+
+    if ($to_encoding) 
+    {
+        $output = mb_convert_encoding($output, $to_encoding, $from_encoding);
+    }
+    return $this->output($output);
+}
+}
+?>
+
+Step:2 Adding Helper in your controller.
+
+Add the following line in the controller for which you want to use this helper to export the data.
+var $helpers = array('Html', 'Form','Csv'); 
+
+Step:3 Create Export method in the controller(Example: PostController).
+function export()
+{
+    $this->set('posts', $this->Post->find('all'));
+    $this->layout = null;
+    $this->autoLayout = false;
+    Configure::write('debug','0');
+}
+
+
+
+Note: One thing to note here, you can use any of findTypes or custom query. But in each type you need to check the array key in the result array. They can be different. To know more about findtypes, data retrieving methods and their return array structure please click here
+
+
+Example
+
+If you use $this->Post->find('all');  then the result array has Model name as array key (Here Post is Model name). Result array would be like this:
+
+
+Array
+(
+    [0] => Array
+        (
+            [Post] => Array
+                (
+                    [id] => 1
+                    [title] => this is title one
+                    [description] => this is description one
+                )
+
+        )
+
+    [1] => Array
+        (
+            [Post] => Array
+                (
+                    [id] => 2
+                    [title] => this is title two
+                    [description] => this is description two
+                )
+
+        )
+
+)
+
+But if you use custom query like $this->Post->query('select * from posts'); then the result array would be different. It has table name as array key in the result array.(Here posts table name is as a array key)
+
+
+Array
+(
+    [0] => Array
+        (
+            [posts] => Array
+                (
+                    [id] => 1
+                    [title] => this is title one
+                    [description] => this is description one
+                )
+
+        )
+
+    [1] => Array
+        (
+            [posts] => Array
+                (
+                    [id] => 2
+                    [title] => this is title two
+                    [description] => this is description two
+                )
+
+        )
+
+)
+
+So, according to the data retrieving method you have used, you need to make changes in the next files.  
+
+Step:4 Create file named export.ctp in app/View/ your controller(Posts here) folder and add the following code.
+<?php
+
+$line= $posts[0]['Post'];
+$this->CSV->addRow(array_keys($line));
+ foreach ($posts as $post)
+ {
+   $line= $post['Post']; 
+   $this->CSV->addRow($line);
+ }
+ $filename='posts';
+ echo  $this->CSV->render($filename);
+?>
+
+Step:5 Create the export data link.
+
+<?php echo $this->Html->link('Export',array('controller'=>'posts','action'=>'export'), array('target'=>'_blank'));?>
+That’s it you’re Done.
+
+Like This Post? Please share!
+Subscribe Through Email And Get Free Updates
+
+
+Enter your email...
+SignUp
+You May Also Like...
+
+Top 50 CakePHP Interview Questions and Answers
+Upload and Download PDF File in CakePHP
+Difference between Required and notEmpty in CakePHP
+Search with Pagination Using Session in CakePHP
+Generate Previous Next Posts Link in CakePHP
+Implementing Welcome Popup in CakePHP Part : 2
+Custom Flash Messages in CakePHP
+How to Integrate Color Picker in CakePHP
+Implementing Welcome Popup in CakePHP
+Ajax Call Validation in CakePHP
+6 Comments:
+
+
+NARESH
+July 30, 2014 at 4:57 PM
+http://stackoverflow.com/questions/25035285/export-mysql-data-in-csv-in-cakephp
+
+Notice (8): Undefined offset: 0 [APP\View\Frontusers\admin_exportemails.ctp, line 12]
+
+Warning (2): fputcsv() expects parameter 2 to be array, null given [APP\View\Helper\CsvHelper.php, line 36]
+
+Notice (8): Undefined offset: 1 [APP\View\Frontusers\admin_exportemails.ctp, line 12]
+
+Warning (2): fputcsv() expects parameter 2 to be array, null given [APP\View\Helper\CsvHelper.php, line 36]
+
+Reply
+
+KETAN PATEL
+August 7, 2014 at 10:46 PM
+you made mistake in the for loop and iterated it in wrong way.just ommit the below line from the foreach loop.
+
+$line =$useremail[$key]['Frontuser'];
+
+Reply
+
+SRIZNA PAUDEL
+August 12, 2015 at 6:42 PM
+In the export function, instead of using find('all'), can we write a query?
+
+$this->set('posts', $this->Post->find('all'));
+
+Instead of the above line, I need to do sth like this:
+
+$this->ModelName->query('select * from tablename where field='value'");
+
+
+When I write any query, I get errors. How can I fix them?
+
+Reply
+
+KETAN PATEL
+August 13, 2015 at 12:03 AM
+Yes, you can use any data retrieval method. I have updated the article so I would request you to read it once again. I have added examples to clear your doubts and issues. Thanks for asking, this example and explanation can be helpful for others also.
+
+
+Thanks,
+Ketan Patel.
+
+
+SRIZNA PAUDEL
+August 13, 2015 at 11:00 AM
+Hey, thank you. The problem is now solved. :)
+
+Reply
+
+RAGHUPATHI S
+November 20, 2015 at 10:48 AM
+Thank You..:)
+
+Reply
+
+Newer Post Older Post Home
+Subscribe Via Email
+
+Subscribe to our newsletter to get the latest updates to your inbox. ;-)
+
+Your email address is safe with us!
+Facebook
+Twitter
+Google+
+RSS
+ 
+Enter your email...
+ SignUp
+Categories
+AJAX
+CakePHP
+CSV File
+DRUPAL
+Javascript
+jQuery
+MySQL
+Node.js
+Opencart
+PHP
+Tips
+Popular Posts
+Country State City Dropdown Using Ajax
+How to Import CSV File Data Into Mysql Using PHP
+Login Form Using Ajax and jQuery
+Top 50 CakePHP Interview Questions and Answers
+How to Add Custom Product Field in OpenCart
+Opencart Custom Module Development
+Like Us On Facebook
+
+Blog Archive
+►  2015 (12)
+►  2014 (23)
+▼  2013 (40)
+▼  December (1)
+Export Data into Excel or CSV file in CakePHP
+►  November (1)
+►  October (2)
+►  September (6)
+►  August (6)
+►  July (9)
+►  June (3)
+►  May (5)
+►  April (7)
+
+
+
+Protected by Copyscape
+Home About Showcase Sitemap Privacy Policy Advertise Contact me
+
+Copyright ©

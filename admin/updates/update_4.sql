@@ -1,0 +1,3 @@
+ALTER TABLE `members`
+	ADD COLUMN `telnr` VARCHAR(100) NULL AFTER `address`,
+	ADD COLUMN `cellnr` VARCHAR(100) NULL AFTER `telnr`;

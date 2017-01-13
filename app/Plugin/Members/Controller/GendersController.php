@@ -3,10 +3,10 @@
 App::uses('MembersAppController', 'Members.Controller');
 
 /**
- * Spouses Controller
+ * Genders Controller
  *
  * @category Controller
- * @package  Croogo.Members.Controller
+ * @package  Croogo.Genders.Controller
  * @version  1.0
  * @author   Fahad Ibnay Heylaal <contact@fahad19.com>
  * @license  http://www.opensource.org/licenses/mit-license.php The MIT License

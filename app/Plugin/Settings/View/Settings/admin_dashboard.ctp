@@ -2,7 +2,9 @@
 <?php
 $this->Html
     ->addCrumb(__d('croogo', ''), array('plugin' => 'settings', 'controller' => 'settings', 'action' => 'dashboard'), array('icon' => 'refresh'))
-	->addCrumb(__d('croogo', 'Dashboard'), '/' . $this->request->url);
+	->addCrumb(__d('croogo', 'Dashboard'), '/' . $this->request->url)
+	->addCrumb(__d('croogo', 'Print PDF'),array('controller' => 'settings', 'action' => 'view_pdf', 58), array('target'=>'_blank'));
+
 ?>
 
 <div class="span4">

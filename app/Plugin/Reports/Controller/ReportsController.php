@@ -76,6 +76,13 @@ class ReportsController extends ReportsAppController {
         }
         
     }
+
+    public function admin_export_payments_view() {
+        if ($this->request->data) {
+            $this->Croogo->redirect(array('plugin' => 'members', 'controller' => 'members', 'action' => 'print_form', $this->request->data['Form']['language']));
+        }
+        
+    }
     
     function admin_export() {
         

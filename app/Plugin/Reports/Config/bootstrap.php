@@ -26,12 +26,22 @@ CroogoNav::add('reports', array(
 	'weight' => 50,
 	'children' => array(
 		'export_csv' => array(
-			'title' => __d('croogo', 'Export CSV'),
+			'title' => __d('croogo', 'Members'),
 			'url' => array(
 				'admin' => true,
 				'plugin' => 'reports',
 				'controller' => 'reports',
 				'action' => 'export_csv_view',
+			),
+			'weight' => 10,
+		),
+		'export_payments_csv' => array(
+			'title' => __d('croogo', 'Payments'),
+			'url' => array(
+				'admin' => true,
+				'plugin' => 'reports',
+				'controller' => 'reports',
+				'action' => 'export_payments_view',
 			),
 			'weight' => 10,
 		),

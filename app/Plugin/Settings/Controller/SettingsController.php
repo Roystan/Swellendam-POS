@@ -28,7 +28,7 @@ class SettingsController extends SettingsAppController {
  * @var array
  * @access public
  */
-	public $uses = array('Settings.Setting','Payments.Payment');
+	public $uses = array('Settings.Setting', 'Payments.Payment');
 
 /**
  * Helpers used by the Controller
@@ -223,5 +223,26 @@ class SettingsController extends SettingsAppController {
 
 		$this->redirect(array('admin' => true, 'controller' => 'settings', 'action' => 'index'));
 	}
+    
+    public function admin_view_pdf($id = null) {
+        
+        if (empty($this->request->data)) {
+            if (!$id) {
+                $this->Session->setFlash('Sorry, there was payment for this date.');
+                $this->redirect(array('action' => 'index'), null, true);
+            }
+            
+            $this->set('payments', $this->Payment->find('all', array(
+                    'limit' => 10,)
+                ));
+            
+            $this->set('todays_member_payment_summary_arr', $this->Payment->query("SELECT * FROM payments AS `Payment` LEFT JOIN members AS `Member` ON (`Payment`.`member_id` = `Member`.`id`) WHERE `Member`.`id` IS NOT NULL AND `Payment`.`date_created` = CURDATE()"));
+            $this->set('todays_senior_citizen_payment_summary_arr', $this->Payment->query("SELECT * FROM payments AS `Payment` LEFT JOIN senior_citizens AS `SeniorCitizen` ON (`Payment`.`senior_citizen_id` = `SeniorCitizen`.`id`) WHERE `SeniorCitizen`.`id` IS NOT NULL AND `Payment`.`date_created` = CURDATE()"));
+	
+            
+            $this->layout = 'pdf'; //this will use the pdf.ctp layout
+            $this->render();
+        }
+    }
 
 }

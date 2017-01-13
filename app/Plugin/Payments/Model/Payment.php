@@ -66,13 +66,13 @@ class Payment extends PaymentsAppModel {
 //				'last' => true,
 //			),
 //		),
-		'member_id' => array(
-			'notEmpty' => array(
-				'rule' => 'notEmpty',
-				'message' => 'This field cannot be left blank.',
-				'last' => true,
-			),
-		),
+//		'member_id' => array(
+//			'notEmpty' => array(
+//				'rule' => 'notEmpty',
+//				'message' => 'This field cannot be left blank.',
+//				'last' => true,
+//			),
+//		),
 	);
     
     /**
@@ -94,7 +94,7 @@ class Payment extends PaymentsAppModel {
     
     public function afterSave($options = array()) {
 		
-            $this->redirect(array('plugin' => 'members', 'controller' => 'members', 'action' => 'print_receipt'));
+//            $this->redirect(array('plugin' => 'members', 'controller' => 'members', 'action' => 'print_receipt'));
 
             return true;
 	}

@@ -42,7 +42,7 @@ class SeniorCitizensController extends SeniorCitizensAppController {
     var $helpers = array('Html', 'Form', 'Csv');
     
     public function beforeFilter() {
-        $this->Security->unlockedActions = array('admin_edit', 'admin_add', 'admin_delete', 'admin_index', 'edit', 'index');
+        $this->Security->unlockedActions = array('admin_edit', 'admin_add', 'admin_delete', 'admin_index', 'admin_print_receipt', 'admin_capture_payment', 'edit', 'delete', 'index', 'print_receipt', 'capture_payment');
         parent::beforeFilter();
     }
 

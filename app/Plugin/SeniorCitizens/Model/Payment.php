@@ -76,7 +76,7 @@ class Payment extends SeniorCitizensAppModel {
  */
 	public function beforeSave($options = array()) {
 		
-		$this->SeniorCitizen->read(null, $this->data['Payment']['senior_citizen_id']);
+//		$this->SeniorCitizen->read(null, $this->data['Payment']['senior_citizen_id']);
 		
 //		if($this->data['Payment']['date_for'] >= date('Y-m-d')){
 //			
@@ -95,10 +95,10 @@ class Payment extends SeniorCitizensAppModel {
 //				  'in_arrears' => $months,
 //			));
 //		}
-                
-                $this->data['Payment']['date_created'] = date('Y-m-d');
-		
-		$this->SeniorCitizen->save();
+//                
+//                $this->data['Payment']['date_created'] = date('Y-m-d');
+//		
+//		$this->SeniorCitizen->save();
 
 		return true;
 	}

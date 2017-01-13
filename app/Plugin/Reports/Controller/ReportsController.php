@@ -1,6 +1,5 @@
 <?php
 
-//App::uses('CakeEmail', 'Network/Email');
 App::uses('ReportsAppController', 'Reports.Controller');
 
 /**
@@ -79,7 +78,13 @@ class ReportsController extends ReportsAppController {
     }
     
     function admin_export() {
-        $members = $this->Member->find('all');
+        
+        $members = $this->Member->find('all', array(
+            'conditions' => array(
+                'Member.created' => date('Y-m-d'),
+            ),
+        ));
+
         $this->set('members', $members);
         $this->set('genders', $this->Member->Gender->find('list'));
         $this->set('categories', $this->Member->Category->find('list'));

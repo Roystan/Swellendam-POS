@@ -22,8 +22,8 @@ $this->Html
 		<table class="table table-striped">
 			<?php
 			$tableHeaders = $this->Html->tableHeaders(array(
+                $this->Paginator->sort('lastname', __d('croogo', 'Lastname')),
 				$this->Paginator->sort('firstname', __d('croogo', 'Firstname')),
-				$this->Paginator->sort('lastname', __d('croogo', 'Lastname')),
 				$this->Paginator->sort('idnumber', __d('croogo', 'Id Number')),
 				$this->Paginator->sort('linked_to', __d('croogo', 'Linked To')),
 				$this->Paginator->sort('age', __d('croogo', 'Age')),
@@ -39,11 +39,11 @@ $this->Html
 			<tbody>
 				<?php foreach ($dependants as $dependant): ?>
 				<tr>
-					<td>
-						<?php echo $dependant['Dependant']['firstname']; ?>
+                    <td>
+						<?php echo $dependant['Dependant']['lastname']; ?>
 					</td>
 					<td>
-						<?php echo $dependant['Dependant']['lastname']; ?>
+						<?php echo $dependant['Dependant']['firstname']; ?>
 					</td>
 					<td>
 						<?php echo $dependant['Dependant']['idnumber']; ?>

@@ -1,7 +1,7 @@
 <h2 class="hidden-desktop"><?php echo $title_for_layout; ?></h2>
 <?php
 $this->Html
-	->addCrumb('', '/admin', array('icon' => 'home'))
+    ->addCrumb(__d('croogo', ''), array('plugin' => 'settings', 'controller' => 'settings', 'action' => 'dashboard'), array('icon' => 'refresh'))
 	->addCrumb(__d('croogo', 'Dashboard'), '/' . $this->request->url);
 ?>
 
@@ -29,7 +29,7 @@ $this->Html
                     $total += $todays_member_payment_summary['Payment']['amount_received'];
                     $todays_payment_summary_tbl .= 
                             '<tr>
-                                    <td>' . $todays_member_payment_summary['Member']['firstname'] . ' ' . $todays_member_payment_summary['Member']['lastname'] . '</td>
+                                    <td>' . '<font face="courier" size=2 color="blue"><strong>M</strong></font>  ' . $todays_member_payment_summary['Member']['firstname'] . ' ' . $todays_member_payment_summary['Member']['lastname'] . '</td>
                                     <td>R' . $todays_member_payment_summary['Payment']['amount_received'] . '</td>
                             </tr>';
                 }
@@ -38,7 +38,7 @@ $this->Html
                     $total += $todays_senior_citizen_payment_summary['Payment']['amount_received'];
                     $todays_payment_summary_tbl .= 
                             '<tr>
-                                    <td>' . $todays_senior_citizen_payment_summary['SeniorCitizen']['firstname'] . ' ' . $todays_senior_citizen_payment_summary['SeniorCitizen']['lastname'] . '</td>
+                                    <td>' . '<font face="courier" size=2 color="orange"><strong>S</strong></font>  ' .$todays_senior_citizen_payment_summary['SeniorCitizen']['firstname'] . ' ' . $todays_senior_citizen_payment_summary['SeniorCitizen']['lastname'] . '</td>
                                     <td>R' . $todays_senior_citizen_payment_summary['Payment']['amount_received'] . '</td>
                             </tr>';
                 }

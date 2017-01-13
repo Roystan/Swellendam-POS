@@ -3,7 +3,7 @@
 App::uses('AppController', 'Controller');
 
 /**
- * Titles Application controller
+ * Payments Application controller
  *
  * @category Controllers
  * @package  Croogo.Payments.Controller

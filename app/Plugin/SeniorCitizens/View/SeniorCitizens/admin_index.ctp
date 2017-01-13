@@ -23,8 +23,8 @@ $this->Html
 		<?php
 			$tableHeaders = $this->Html->tableHeaders(array(
 				$this->Paginator->sort('policyno', __d('croogo', 'Policy No')),
+                $this->Paginator->sort('lastname', __d('croogo', 'Lastname')),
 				$this->Paginator->sort('firstname', __d('croogo', 'Firstname')),
-				$this->Paginator->sort('lastname', __d('croogo', 'Lastname')),
 				$this->Paginator->sort('idnumber', __d('croogo', 'Id Number')),
 					__d('croogo', 'Actions'),
 				''
@@ -40,6 +40,9 @@ $this->Html
 					<td>
 						<?php echo $senior_citizen['SeniorCitizen']['policyno']; ?>
 					</td>
+                    <td>
+						<?php echo $senior_citizen['SeniorCitizen']['lastname']; ?>
+					</td>
 					<td>
 						<span>
 						<?php
@@ -52,10 +55,7 @@ $this->Html
 						?>
 						</span>
 					</td>
-					<td>
-						<?php echo $senior_citizen['SeniorCitizen']['lastname']; ?>
-					</td>
-                                        <td>
+                    <td>
 						<?php echo $senior_citizen['SeniorCitizen']['idnumber']; ?>
 					</td>
 					<td>

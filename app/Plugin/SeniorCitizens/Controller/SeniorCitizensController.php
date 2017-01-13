@@ -171,7 +171,7 @@ class SeniorCitizensController extends SeniorCitizensAppController {
      * @access public
      */
     public function admin_capture_payment($id = null) {
-        $this->set('title_for_layout', __d('croogo', 'Edit Senior Citizen'));
+        $this->set('title_for_layout', __d('croogo', 'Capture Payment'));
 
         if (!$id && empty($this->request->data)) {
             $this->Session->setFlash(__d('croogo', 'Invalid Senior Citizen'), 'default', array('class' => 'error'));
@@ -192,7 +192,7 @@ class SeniorCitizensController extends SeniorCitizensAppController {
                 }
                 
                 $this->Croogo->redirect(array('action' => 'print_receipt', $this->Payment->id, 0, $this->PaymentLog->id));
-                $this->Croogo->redirect(array('action' => 'edit', $this->SeniorCitizen->id));
+//                $this->Croogo->redirect(array('action' => 'edit', $this->SeniorCitizen->id));
             } else {
                 $this->Session->setFlash(__d('croogo', 'The Senior Citizen could not be saved. Please, try again.'), 'default', array('class' => 'error'));
             }

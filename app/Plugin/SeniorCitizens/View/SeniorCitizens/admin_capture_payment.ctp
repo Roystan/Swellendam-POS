@@ -35,6 +35,8 @@ if ($this->request->params['action'] == 'admin_add') {
 		'label' => __d('croogo', 'Payment Date Due'), 
                 'default' => $due_date[0][0]['due_date'],
 	));
+    
+	echo $this->Form->input('date_created', array('type' => 'hidden', 'value' => date('Y-m-d')));
 	echo $this->Form->input('senior_citizen_id', array('type' => 'hidden', 'value' => $this->data['SeniorCitizen']['id'])
 	);
 	

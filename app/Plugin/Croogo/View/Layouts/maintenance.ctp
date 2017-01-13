@@ -120,7 +120,7 @@
                             <div class="caption-content">
                                 <h2 class="animated fadeInDown">Swellendam Funeral Services</h2>
                                 <span class="animated fadeInDown">Affordable Funeral Cover</span>
-                                <a href="/staging/swellendamfuneralservices/admin/users/users/login" class="btn btn-blue btn-effect">Admin Login</a>
+                                <a href="/Swellendam-POS/trunk/admin/users/users/login" class="btn btn-blue btn-effect">Admin Login</a>
                             </div>
                         </div>
 						
@@ -133,7 +133,7 @@
                             <div class="caption-content">
                                 <h2>Various premium packages</h2>
                                 <span>We have a list of premiums to fit your pocket</span>
-                                <a href="/swellendamfuneralservices/admin/users/users/login" class="btn btn-blue btn-effect">Admin Login</a>
+                                <a href="/Swellendam-POS/trunk/admin/users/users/login" class="btn btn-blue btn-effect">Admin Login</a>
                             </div>
                         </div>
 						
@@ -146,7 +146,7 @@
                             <div class="caption-content">
                                 <h2>Burial And Cremation</h2>
                                 <span>Professional Services</span>
-                                <a href="/swellendamfuneralservices/admin/users/users/login" class="btn btn-blue btn-effect">Admin Login</a>
+                                <a href="/Swellendam-POS/trunk/admin/users/users/login" class="btn btn-blue btn-effect">Admin Login</a>
                             </div>
                         </div>
 

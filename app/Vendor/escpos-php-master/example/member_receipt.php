@@ -15,7 +15,7 @@ use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\EscposImage;
 
 //$connector = new FilePrintConnector("php://stdout");
-$connector = new WindowsPrintConnector("smb://user-PC1/XP-58");
+$connector = new WindowsPrintConnector("smb://user-PC1/POS-58");
 
 /* A wrapper to do organise item names & prices into columns */
 class item

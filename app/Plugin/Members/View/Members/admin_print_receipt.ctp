@@ -44,12 +44,22 @@ try {
     $printer -> feed(2);
 
     $printer -> setJustification(Printer::JUSTIFY_LEFT);
-    $printer -> text("Datum:          " . $this->data['Payment']['date_for'] . "\n");
-    $printer -> text("Klerk:          " . $this->Session->read('Auth.User.username') . "\n");
-    $printer -> text("Kwitansie No.:    " . $payment_log_id . "\n");
+    //$printer -> text("Datum(s):          " . isset($_SESSION['payment_data']) ? $_SESSION['payment_data']['date_for'] . "\n" : $this->data['Payment']['date_for'] . "\n");
+    if (isset($_SESSION['payment_data'])) {
+		$printer -> text("Datum(s):      " . rtrim($_SESSION['payment_data']['date_for'], ',') . "\n");
+    } else {
+		$printer -> text("Datum(s):          " . $this->data['Payment']['date_for'] . "\n");
+    }
+	$printer -> text("Klerk:         " . $this->Session->read('Auth.User.username') . "\n");
+    $printer -> text("Kwitansie No.:  " . $payment_log_id . "\n");
     $printer -> text("Member:         " . $member['Member']['firstname'] . " " . $member['Member']['lastname'] . "\n");
-    $printer -> text("Bedrag Ontvang: " . "R" . $this->data['Payment']['amount_received']);
-    
+    //$printer -> text("Bedrag Ontvang: " . "R" . $this->data['Payment']['amount_received']);
+	if (isset($_SESSION['payment_data'])) {
+		$printer -> text("Bedrag Ontvang: " . "R" . $_SESSION['payment_data']['amount_received']);
+	} else {
+		$printer -> text("Bedrag Ontvang: " . "R" . $this->data['Payment']['amount_received']);
+    }
+	
     $printer -> selectPrintMode();
 
     /* Footer */
@@ -80,7 +90,7 @@ try {
     ?>
         <tr>
             <td style="font-size: 20px;" width="100%"> 
-                <strong>Thank you for your payment of R <?php echo $this->data['Payment']['amount_received']; ?></strong><br/><br/><br/>
+                <strong>Thank you for your payment of R <?php echo isset($_SESSION['payment_data']) ? $_SESSION['payment_data']['amount_received'] : $this->data['Payment']['amount_received']; ?></strong><br/><br/><br/>
             </td>
         </tr>
     <?php 

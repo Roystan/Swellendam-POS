@@ -99,6 +99,8 @@ class I18n {
  */
 	public function __construct() {
 		$this->l10n = new L10n();
+ini_set('memory_limit', '1024M');
+ini_set('max_execution_time', 300);	// 300 seconds = 5 minutes
 	}
 
 /**

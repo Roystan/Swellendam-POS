@@ -34,11 +34,31 @@ $this->Html->addCrumb(__d('croogo', 'Capture Payment'), array('plugin' => 'membe
 		'label' => __d('croogo', 'Amount *'),
                 'default' => $default_amount,
 	));
-        
-        echo $this->Form->input('months', array(
+   
+	echo $this->Form->input('months', array(
+				'type' => 'select',
+				'options' => array(
+					1 => '1', 
+					2 => '2',
+					3 => '3',
+					4 => '4',
+					5 => '5',
+					6 => '6',
+					7 => '7',
+					8 => '8',
+					9 => '9',
+					10 => '10',
+					11 => '11',
+					12 => '12',
+				),
                 'label' => __d('croogo', 'Months'), 
                 'default' => 1
 	));
+   
+       /* echo $this->Form->input('months', array(
+                'label' => __d('croogo', 'Months'), 
+                'default' => 1
+));*/
 	
 	echo $this->Form->input('date_for', array(
 		'label' => __d('croogo', 'Payment Date Due'), 

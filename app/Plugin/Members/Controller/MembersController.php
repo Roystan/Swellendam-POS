@@ -218,6 +218,165 @@ class MembersController extends MembersAppController {
         $this->set('editFields', $this->Member->editFields());
     }
 
+	public function admin_capture_payment($id = null) {
+        $this->set('title_for_layout', __d('croogo', 'Capture Payment'));
+
+        if (!$id && empty($this->request->data)) {
+            $this->Session->setFlash(__d('croogo', 'Invalid Member'), 'default', array('class' => 'error'));
+            $this->redirect(array('action' => 'index'));
+        }
+        if (!empty($this->request->data)) {
+			
+			if (isset($_SESSION['payment_data'])) {
+				unset($_SESSION['payment_data']);
+			}
+			
+			$new = true;
+			$_SESSION['payment_data']['date_for'] = '';
+			$_SESSION['payment_data']['amount_received'] = 0;
+			
+			if ($new) {
+				
+				$month = $this->request->data['Payment']['date_for']['month'];
+				$day = $this->request->data['Payment']['date_for']['day'];
+				$year = $this->request->data['Payment']['date_for']['year'];
+						
+				$date_for = $year.'-'.$month.'-'.$day;
+				$from_date = false;
+				$to_date = false;
+					
+				for ($i = 0; $i < $this->request->data['Payment']['months']; $i++) {
+						
+					if (!$from_date) {
+						$from_date = date('M Y', strtotime("+".$i." month", strtotime($date_for)));
+					}
+					
+					$date_inc = date('M Y', strtotime("+".$i." month", strtotime($date_for)));
+					
+					if ($this->request->data['Payment']['months'] > 1) {
+						$_SESSION['payment_data']['date_for'] = $from_date . '-' . $date_inc;
+						
+					} else {
+						$_SESSION['payment_data']['date_for'] = $date_inc;
+					}
+					$_SESSION['payment_data']['amount_received'] = $_SESSION['payment_data']['amount_received'] + $this->request->data['Payment']['amount_received'];
+					
+					// Delimiters may be slash, dot, or hyphen
+					list($new_year, $new_month, $new_day) = split('[/.-]', $date_inc);
+					
+					$this->request->data['Payment']['date_for']['month'] = $new_month;
+					$this->request->data['Payment']['date_for']['day'] = $new_day;
+					$this->request->data['Payment']['date_for']['year'] = $new_year;
+						
+					if ($this->Payment->save($this->request->data)) {
+							
+						$this->loadModel('PaymentLog');
+						$this->PaymentLog->create();
+						$this->PaymentLog->data['PaymentLog']['payment_id'] = $this->Payment->id;
+						$this->PaymentLog->data['PaymentLog']['person_type'] = 1; // 1 => member
+						$this->PaymentLog->data['PaymentLog']['date_created'] = date('Y-m-d H:i:s');
+						
+						$payment_id = $this->Payment->id;					
+						$payment_log_id = $this->PaymentLog->id;
+						
+						if ($this->PaymentLog->save($this->request->data)) {
+							
+						}
+						
+						if ($this->request->data['Payment']['months'] == ($i + 1)) {
+							$this->Session->setFlash(__d('croogo', 'The Payment has been captured'), 'default', array('class' => 'success'));
+							$this->Croogo->redirect(array('action' => 'print_receipt', $this->Payment->id, 0, $this->PaymentLog->id));
+						}
+						
+					} else {
+						$this->Session->setFlash(__d('croogo', 'Unable to capture payment. Please, try again.'), 'default', array('class' => 'error'));
+					}
+					
+				}
+				
+			} else {
+						
+				if ($this->Payment->save($this->request->data)) {
+					
+					$this->Session->setFlash(__d('croogo', 'The Payment has been captured'), 'default', array('class' => 'success'));
+					
+					$this->loadModel('PaymentLog');
+					$this->PaymentLog->create();
+					$this->PaymentLog->data['PaymentLog']['payment_id'] = $this->Payment->id;
+					$this->PaymentLog->data['PaymentLog']['person_type'] = 1; // 1 => member
+					$this->PaymentLog->data['PaymentLog']['date_created'] = date('Y-m-d H:i:s');
+					
+					if ($this->PaymentLog->save($this->request->data)) {
+						
+					}
+					
+					$this->Croogo->redirect(array('action' => 'print_receipt', $this->Payment->id, 0, $this->PaymentLog->id));
+					
+				} else {
+					$this->Session->setFlash(__d('croogo', 'Unable to capture payment. Please, try again.'), 'default', array('class' => 'error'));
+				}
+			}
+        }
+
+        if (empty($this->request->data)) {
+            $this->request->data = $this->Member->read(null, $id);
+        }
+
+        $this->set('lastest_payment_date', $this->Payment->find('all', array(
+                    'conditions' => array('member_id' => $id),
+                    'fields' => array('DATE(MAX(date_for)) AS lastest_payment_date', '*'),
+                    'group by' => 'Payment.member_id',
+                    'order' => 'member_id')));
+
+        $this->set('total_received', $this->Payment->find('all', array(
+                    'conditions' => array('member_id' => $id),
+                    'fields' => array('SUM(amount_received) AS total_received', '*'),
+                    'group by' => 'Payment.member_id',
+                    'order' => 'member_id')));
+        
+        $this->set('due_date', $this->Payment->find('all', array(
+                    'conditions' => array('member_id' => $id),
+                    'fields' => array('DATE(MAX(date_for) + INTERVAL 1 MONTH) AS due_date', '*'),
+                    'group by' => 'Payment.member_id',
+                    'order' => 'member_id')));
+
+        $sum = $this->Payment->find('all', array(
+            'conditions' => array(
+                'Payment.member_id' => $id),
+            'fields' => array('sum(Payment.amount_received) as total_sum'
+            )
+                )
+        );
+
+        $this->set('total_payments', $sum);
+
+        $this->Spouse->recursive = 0;
+        $this->paginate['Spouse']['order'] = 'Spouse.id ASC';
+        $this->set('spouses', $this->Spouse->find('all', array(
+                    'limit' => 1,
+                    'conditions' => array('Spouse.member_id' => $id)
+                        )
+        ));
+
+        $this->Dependant->virtualFields['age'] = 'TIMESTAMPDIFF(YEAR, Dependant.dateofbirth, CURDATE())';
+
+        $this->Dependant->recursive = 0;
+        $this->paginate['Dependant']['order'] = 'Dependant.id ASC';
+        $this->set('dependants', $this->Dependant->find('all', array('conditions' => array('Dependant.member_id' => $id)
+        )));
+
+        $this->Payment->recursive = 0;
+        $this->paginate['Payment']['order'] = 'Payment.date_for ASC';
+        $this->set('payments', $this->Payment->find('all', array('conditions' => array('Payment.member_id' => $id)
+        )));
+
+        $this->set('genders', $this->Member->Gender->find('list'));
+        $this->set('categories', $this->Member->Category->find('list'));
+        $this->set('relationships', $this->Member->Relationship->find('list'));
+        $this->set('statuses', $this->Member->Status->find('list'));
+        $this->set('editFields', $this->Member->editFields());
+    }
+	
     /**
      * Admin capture payment
      *
@@ -225,7 +384,7 @@ class MembersController extends MembersAppController {
      * @return void
      * @access public
      */
-    public function admin_capture_payment($id = null) {
+    public function admin_capture_payment_old($id = null) {
         $this->set('title_for_layout', __d('croogo', 'Capture Payment'));
 
         if (!$id && empty($this->request->data)) {

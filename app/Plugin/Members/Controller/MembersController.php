@@ -252,6 +252,7 @@ class MembersController extends MembersAppController {
 					}
 					
 					$date_inc = date('M Y', strtotime("+".$i." month", strtotime($date_for)));
+					$new_date_for = date('Y-m-d', strtotime("+".$i." month", strtotime($date_for)));
 					
 					if ($this->request->data['Payment']['months'] > 1) {
 						$_SESSION['payment_data']['date_for'] = $from_date . '-' . $date_inc;
@@ -259,6 +260,7 @@ class MembersController extends MembersAppController {
 					} else {
 						$_SESSION['payment_data']['date_for'] = $date_inc;
 					}
+					
 					$_SESSION['payment_data']['amount_received'] = $_SESSION['payment_data']['amount_received'] + $this->request->data['Payment']['amount_received'];
 					
 					// Delimiters may be slash, dot, or hyphen
@@ -269,6 +271,8 @@ class MembersController extends MembersAppController {
 					$this->request->data['Payment']['date_for']['year'] = $new_year;
 						
 					if ($this->Payment->save($this->request->data)) {
+							
+						$this->Payment->saveField('date_for', $new_date_for);
 							
 						$this->loadModel('PaymentLog');
 						$this->PaymentLog->create();

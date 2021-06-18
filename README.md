@@ -41,3 +41,21 @@ Get Support!
 [![Bake Status](https://secure.travis-ci.org/cakephp/cakephp.png?branch=master)](http://travis-ci.org/cakephp/cakephp)
 
 ![Cake Power](https://raw.github.com/cakephp/cakephp/master/lib/Cake/Console/Templates/skel/webroot/img/cake.power.gif)
+
+
+Printer setup
+1: Install printer drivers
+2: Go to Control Panel -> Devices and Printers,
+3. Double click on Printer
+4. Click on 'Printer' tab and select 'Sharing' option.
+5. Tick 'Share this printer' checkbox.
+6. Enter Share name: POS-58
+7. Tick 'Render' print jobs on client computers
+8. Click save
+
+Open member_receipt.php file.
+Update to:
+
+$connector = new WindowsPrintConnector("smb://DESKTOP-PNFFDI3/POS-58");
+
+DESKTOP-PNFFDI3 = Computer name
